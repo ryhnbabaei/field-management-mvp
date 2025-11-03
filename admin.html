@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>پنل مدیر</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="storage.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>گزارش‌های ثبت‌شده</h2>
+    <div id="reports"></div>
+  </div>
+
+  <script>
+  function renderReports(){
+    const container = document.getElementById('reports');
+    container.innerHTML = '';
+    const reports = getReports();
+    if(reports.length === 0){
+      container.innerHTML = '<p>هیچ گزارشی ثبت نشده.</p>';
+      return;
+    }
+    reports.forEach((r,i) => {
+      const div = document.createElement('div');
+      div.className = 'report';
+      div.innerHTML = `<strong>${r.date}</strong><br>
+        توضیح: ${r.description}<br>
+        پیشرفت: ${r.progress}%<br>
+        مختصات: ${r.gps}<br>`;
+      if(r.photo){
+        const img = document.createElement('img');
+        img.src = r.photo;
+        div.appendChild(img);
+      }
+      const btn = document.createElement('button');
+      btn.textContent = 'حذف';
+      btn.onclick = () => { deleteReport(i); renderReports(); };
+      div.appendChild(btn);
+      container.appendChild(div);
+    });
+  }
+  renderReports();
+  </script>
+</body>
+</html>
