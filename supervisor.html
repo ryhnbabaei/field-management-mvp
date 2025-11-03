@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>فرم ناظر</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="storage.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>ثبت گزارش ناظر</h2>
+    <form id="reportForm">
+      <label>توضیح کار:</label>
+      <textarea id="description" required></textarea>
+      <label>درصد پیشرفت:</label>
+      <input type="number" id="progress" min="0" max="100" required>
+      <label>عکس (اختیاری):</label>
+      <input type="file" id="photo" accept="image/*">
+      <label>مختصات GPS:</label>
+      <input type="text" id="gps" placeholder="مثلاً 35.6892, 51.3890">
+      <button type="submit">ذخیره گزارش</button>
+    </form>
+  </div>
+
+  <script>
+  document.getElementById('reportForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const description = document.getElementById('description').value;
+    const progress = document.getElementById('progress').value;
+    const gps = document.getElementById('gps').value;
+    const photoInput = document.getElementById('photo');
+    let photoData = null;
+    if(photoInput.files.length > 0){
+        const reader = new FileReader();
+        reader.onload = function(){
+            photoData = reader.result;
+            const report = {
+              date: new Date().toLocaleString(),
+              description, progress, gps, photo: photoData
+            };
+            saveReport(report);
+            alert('گزارش ذخیره شد');
+            e.target.reset();
+        }
+        reader.readAsDataURL(photoInput.files[0]);
+    } else {
+        const report = {
+          date: new Date().toLocaleString(),
+          description, progress, gps, photo: null
+        };
+        saveReport(report);
+        alert('گزارش ذخیره شد');
+        e.target.reset();
+    }
+  });
+  </script>
+</body>
+</html>
